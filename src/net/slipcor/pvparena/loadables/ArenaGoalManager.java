@@ -71,6 +71,7 @@ public class ArenaGoalManager {
 		types.add(new GoalTeamDeathMatch());
 		types.add(new GoalTeamLives());
 		types.add(new GoalTime());
+        types.add(new GoalSnowball());
 
 		for (ArenaGoal type : types) {
 			type.onThisLoad();
