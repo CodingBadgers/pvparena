@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -83,6 +84,12 @@ public final class ConfigurationManager {
 					new ArrayList<String>());
 			for (String mod : list) {
 				ArenaModule aMod = PVPArena.instance.getAmm().getModByName(mod);
+                
+                if (aMod == null) {
+                    PVPArena.instance.getLogger().log(Level.SEVERE, "A mod with the name '" + mod + "' could not be found");
+                    continue;
+                }
+                
 				aMod = (ArenaModule) aMod.clone();
 				aMod.setArena(arena);
 				aMod.toggleEnabled(arena);
