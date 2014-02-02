@@ -86,7 +86,7 @@ public final class ConfigurationManager {
 				ArenaModule aMod = PVPArena.instance.getAmm().getModByName(mod);
                 
                 if (aMod == null) {
-                    PVPArena.instance.getLogger().log(Level.SEVERE, "A mod with the name '" + mod + "' could not be found");
+                    PVPArena.instance.getLogger().log(Level.SEVERE, "A mod with the name '" + mod + "' could not be found for arena '" + arena.getName() + "'.");
                     continue;
                 }
                 
