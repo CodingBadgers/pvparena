@@ -51,12 +51,10 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
  * @author slipcor
  */
 
-public class GoalSnowball extends ArenaGoal implements Listener {
+public class GoalSnowball extends ArenaGoal {
 	public GoalSnowball() {
 		super("Snowball");
 		debug = new Debug(104);
-        
-        PVPArena.instance.getServer().getPluginManager().registerEvents(this, PVPArena.instance);
 	}
 
 	@Override
@@ -238,9 +236,15 @@ public class GoalSnowball extends ArenaGoal implements Listener {
         return items;
     }
     
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onEnityDamageByEntity(EntityDamageByEntityEvent event) {
-        
+        /**
+     * 
+     * @param attacker
+     * @param defender
+     * @param event 
+     */
+    public void onEntityDamageByEntity(final Player attacker,
+			final Player defender, final EntityDamageByEntityEvent event) {
+    
         Entity entity = event.getEntity();
         if (!(entity instanceof Player)) {
             return;
@@ -261,37 +265,28 @@ public class GoalSnowball extends ArenaGoal implements Listener {
             return;
         }
         
+        Snowball snowball = (Snowball)damagerEntity;
+        if (!(snowball.getShooter() instanceof Player)) {
+            event.setCancelled(true);
+            return;
+        }
+        
+        Player shooter = (Player)snowball.getShooter();
+        ArenaPlayer aShooter = ArenaPlayer.parsePlayer(shooter.getName());
+        if (aShooter == null) {
+            event.setCancelled(true);
+            return;
+        }
+        
+        if (aPlayer.getArenaTeam().hasPlayer(shooter)) {
+            event.setCancelled(true);
+            return;
+        }
+        
         // Make the snowball reallly powerful
         event.setDamage(30.0);
         
-    }
-    
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        
-        Player player = event.getPlayer();
-        
-        ArenaPlayer aPlayer = ArenaPlayer.parsePlayer(player.getName());
-        if (aPlayer == null) {
-            return;
-        }
-        
-        if (!arena.getFighters().contains(aPlayer)) {
-            return;
-        }
-        
-        ItemStack item = player.getItemInHand();
-        if (item == null) {
-            return;
-        }
-        
-        if (item.getType() != Material.SNOW_BALL) {
-            return;
-        }
-        
-        // Infinite snowballs!
-        item.setAmount(64);        
-    }
+	}
 
 	@Override
 	public void commitPlayerDeath(final Player respawnPlayer, final boolean doesRespawn,

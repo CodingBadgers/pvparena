@@ -18,6 +18,7 @@ import net.slipcor.pvparena.classes.PACheck;
 import net.slipcor.pvparena.core.Config.CFG;
 import net.slipcor.pvparena.core.Debug;
 import net.slipcor.pvparena.ncloader.NCBLoadable;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 /**
  * <pre>
@@ -517,5 +518,15 @@ public class ArenaGoal extends NCBLoadable {
 	 */
 	public String version() {
 		return "outdated";
+	}
+    
+    /**
+     * 
+     * @param attacker
+     * @param defender
+     * @param event 
+     */
+    public void onEntityDamageByEntity(final Player attacker,
+			final Player defender, final EntityDamageByEntityEvent event) {
 	}
 }

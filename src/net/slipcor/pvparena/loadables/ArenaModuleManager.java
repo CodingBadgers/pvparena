@@ -173,6 +173,10 @@ public class ArenaModuleManager {
 		for (ArenaModule mod : arena.getMods()) {
 			mod.onEntityDamageByEntity(attacker, defender, event);
 		}
+        
+        for (ArenaGoal goal : arena.getGoals()) {
+			goal.onEntityDamageByEntity(attacker, defender, event);
+		}
 	}
 	
 	public static void onEntityExplode(final Arena arena, final EntityExplodeEvent event) {
