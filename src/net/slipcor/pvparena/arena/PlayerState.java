@@ -1,6 +1,7 @@
 package net.slipcor.pvparena.arena;
 
 import java.util.Collection;
+import java.util.logging.Level;
 
 import net.slipcor.pvparena.PVPArena;
 import net.slipcor.pvparena.core.Config.CFG;
@@ -67,6 +68,11 @@ public final class PlayerState {
 		
 		final ArenaPlayer aPlayer = ArenaPlayer.parsePlayer(player.getName());
 		final Arena arena = aPlayer.getArena();
+        
+        if (arena == null) {
+            PVPArena.instance.getLogger().log(Level.SEVERE, "The player '" + player.getName() + "' is not in an arena!");
+            return;
+        }
 
 		if (arena.getArenaConfig().getBoolean(CFG.CHAT_COLORNICK)) {
 			displayname = player.getDisplayName();

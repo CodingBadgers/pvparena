@@ -1162,62 +1162,72 @@ public class Arena {
 		}
 		getDebugger().i("resetting player: " + player.getName() + (soft ? "(soft)" : ""),
 				player);
-		
-		try {
-			new ArrowHack(player);
-		} catch (Exception e) {
-		}
-		
-		final ArenaPlayer aPlayer = ArenaPlayer.parsePlayer(player.getName());
-		if (aPlayer.getState() != null) {
-			aPlayer.getState().unload();
-		}
+        
+        final Arena thisArena = this;
+        
+        Bukkit.getScheduler().runTaskLater(PVPArena.instance, new Runnable() {
 
-		ArenaModuleManager.resetPlayer(this, player, force);
+            @Override
+            public void run() {
+                		
+                try {
+                    new ArrowHack(player);
+                } catch (Exception e) {
+                }
 
-		String sClass = "";
-		if (aPlayer.getArenaClass() != null) {
-			sClass = aPlayer.getArenaClass().getName();
-		}
+                final ArenaPlayer aPlayer = ArenaPlayer.parsePlayer(player.getName());
+                if (aPlayer.getState() != null) {
+                    aPlayer.getState().unload();
+                }
 
-		if (!sClass.equalsIgnoreCase("custom") ||
-				getArenaConfig().getBoolean(CFG.GENERAL_CUSTOMRETURNSGEAR)) {
-			InventoryManager.clearInventory(player);
-			ArenaPlayer.reloadInventory(this, player);
-		}
+                ArenaModuleManager.resetPlayer(thisArena, player, force);
 
-		getDebugger().i("string = " + string, player);
-		aPlayer.setTelePass(true);
-		if (string.equalsIgnoreCase("old")) {
-			getDebugger().i("tping to old", player);
-			if (aPlayer.getLocation() != null) {
-				getDebugger().i("location is fine", player);
-				final PALocation loc = aPlayer.getLocation();
-				player.teleport(loc.toLocation());
-				player
-						.setNoDamageTicks(
-								getArenaConfig().getInt(
-										CFG.TIME_TELEPORTPROTECT) * 20);
-			}
-		} else {
-			final PALocation loc = SpawnManager.getSpawnByExactName(this, string);
-			if (loc == null) {
-				PVPArena.instance.getLogger().severe("RESET Spawn null: " + this.getName() + "->" + string);
-				(new Exception()).printStackTrace();
-			} else {
-				player.teleport(loc.toLocation());
-				aPlayer.setTelePass(false);
-			}
-			player.setNoDamageTicks(
-							getArenaConfig().getInt(
-									CFG.TIME_TELEPORTPROTECT) * 20);
-		}
-		if (soft || !force) {
-			StatisticsManager.update(this, aPlayer);
-		}
-		if (!soft) {
-			aPlayer.setLocation(null);
-		}
+                String sClass = "";
+                if (aPlayer.getArenaClass() != null) {
+                    sClass = aPlayer.getArenaClass().getName();
+                }
+
+                if (!sClass.equalsIgnoreCase("custom") ||
+                        getArenaConfig().getBoolean(CFG.GENERAL_CUSTOMRETURNSGEAR)) {
+                    InventoryManager.clearInventory(player);
+                    ArenaPlayer.reloadInventory(thisArena, player);
+                }
+
+                getDebugger().i("string = " + string, player);
+                aPlayer.setTelePass(true);
+                if (string.equalsIgnoreCase("old")) {
+                    getDebugger().i("tping to old", player);
+                    if (aPlayer.getLocation() != null) {
+                        getDebugger().i("location is fine", player);
+                        final PALocation loc = aPlayer.getLocation();
+                        player.teleport(loc.toLocation());
+                        player
+                                .setNoDamageTicks(
+                                        getArenaConfig().getInt(
+                                                CFG.TIME_TELEPORTPROTECT) * 20);
+                    }
+                } else {
+                    final PALocation loc = SpawnManager.getSpawnByExactName(thisArena, string);
+                    if (loc == null) {
+                        PVPArena.instance.getLogger().severe("RESET Spawn null: " + thisArena.getName() + "->" + string);
+                        (new Exception()).printStackTrace();
+                    } else {
+                        player.teleport(loc.toLocation());
+                        aPlayer.setTelePass(false);
+                    }
+                    player.setNoDamageTicks(
+                                    getArenaConfig().getInt(
+                                            CFG.TIME_TELEPORTPROTECT) * 20);
+                }
+                if (soft || !force) {
+                    StatisticsManager.update(thisArena, aPlayer);
+                }
+                if (!soft) {
+                    aPlayer.setLocation(null);
+                }
+        
+            }            
+        }, 5L);
 	}
 
 	/**
