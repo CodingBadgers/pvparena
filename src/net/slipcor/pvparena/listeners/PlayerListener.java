@@ -8,6 +8,7 @@ import java.util.Set;
 
 import net.slipcor.pvparena.PVPArena;
 import net.slipcor.pvparena.arena.Arena;
+import net.slipcor.pvparena.arena.ArenaClass;
 import net.slipcor.pvparena.arena.ArenaPlayer;
 import net.slipcor.pvparena.arena.ArenaPlayer.Status;
 import net.slipcor.pvparena.arena.ArenaTeam;
@@ -383,10 +384,40 @@ public class PlayerListener implements Listener {
 		Arena arena = null;
 
 		if (event.hasBlock()) {
+
 			DEBUG.i("block: " + event.getClickedBlock().getType().name(), player);
 			
 			arena = ArenaManager.getArenaByRegionLocation(new PABlockLocation(
 					event.getClickedBlock().getLocation()));
+            
+            if (arena != null) {
+                final Block block = event.getClickedBlock();
+                if (block.getState() instanceof Sign) {
+
+                    final Sign sign = (Sign) block.getState();
+                    final String className = sign.getLine(0);
+                    final String teamName = sign.getLine(3);
+                    
+                    final ArenaClass newClass = arena.getClass(className);
+                    if (newClass != null) {
+                        final ArenaPlayer aPlayer = ArenaPlayer.parsePlayer(player.getName());               
+                        final String playersTeam = aPlayer.getArenaTeam().getName();
+
+                        if (teamName.length() == 0 || playersTeam.equalsIgnoreCase(teamName)) {
+                            aPlayer.setArenaClass(newClass);
+                            InventoryManager.clearInventory(aPlayer.get());
+                            ArenaClass.equip(aPlayer.get(), newClass.getItems());                            
+                        }
+                        else
+                        {
+                            // Trying to use a sign that isn't meant for team
+                            arena.msg(player, Language.parse(arena, MSG.NOTICE_CLASS_SIGN_WRONG_TEAM));
+                        }
+                    }
+                    return;
+                }
+            }
+            
 			if (checkAndCommitCancel(arena, event.getPlayer(), event)) {
 				if (arena != null) {
 					PACheck.handleInteract(arena, player, event, event.getClickedBlock());

@@ -289,6 +289,7 @@ public final class Language {
 		NOTICE_YOU_ESCAPED("nulang.notice.youescaped", "You escaped the battlefield. Goodbye!"),
 		NOTICE_YOU_LEFT("nulang.notice.youleft", "You left the arena!"),
 		NOTICE_YOU_NOCAMP("nulang.notice.younocamp", "You are in a NOCAMP region. Move!"),
+        NOTICE_CLASS_SIGN_WRONG_TEAM("nulang.notice.classsignwrongteam", "This class sign is not intended for your team!"),
 		
 		PLAYER_HAS_WON("nulang.playerhaswon", "%1% is the Champion!"),
 		PLAYER_READY("nulang.playerready", "%1%&e is ready!"),
