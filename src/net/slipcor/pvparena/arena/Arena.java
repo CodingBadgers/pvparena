@@ -55,6 +55,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -773,13 +774,13 @@ public class Arena {
 			try {
 
 				getDebugger().i("last damager: "
-						+ ((Projectile) ((EntityDamageByEntityEvent) lastDamageCause)
-								.getDamager()).getShooter().getType(), player);
+						+ ((LivingEntity)((Projectile) ((EntityDamageByEntityEvent) lastDamageCause)
+								.getDamager()).getShooter()).getType(), player);
 				return Language
 						.parse(this, MSG
 								.getByName("DEATHCAUSE_"
-										+ ((Projectile) ((EntityDamageByEntityEvent) lastDamageCause)
-												.getDamager()).getShooter()
+										+ ((LivingEntity)((Projectile) ((EntityDamageByEntityEvent) lastDamageCause)
+												.getDamager()).getShooter())
 												.getType().name()));
 			} catch (Exception e) {
 

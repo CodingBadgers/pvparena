@@ -190,7 +190,7 @@ public class EntityListener implements Listener {
 
 		if (eDamager instanceof Projectile) {
 			DEBUG.i("parsing projectile");
-			eDamager = ((Projectile) eDamager).getShooter();
+			eDamager = (LivingEntity)((Projectile) eDamager).getShooter();
 			DEBUG.i("=> " + eDamager);
 		}
 
